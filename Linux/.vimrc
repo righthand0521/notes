@@ -51,6 +51,7 @@ autocmd FileType make set    " cancel expandtab setting: Makefile needs to disti
 
 " C
 set tags=./tags,./TAGS,tags;~,TAGS;~    " moved to the function, type Ctrl+] to jump to the definition and then type Ctrl+t
+autocmd FileType c set tabstop=4 | set expandtab | set shiftwidth=4
 
 " Python
 " au BufNewFile,BufRead *.py

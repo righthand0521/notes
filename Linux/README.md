@@ -26,6 +26,9 @@ address 192.168.0.1
 netmask 255.255.255.0
 gateway 192.168.0.254
 dns-nameservers 8.8.8.8 168.95.1.1
+up ip addr add 192.168.0.1/24
+up ip route add 192.168.0.0/24 via 192.168.0.254
+up route add -net 192.168.0.0 netmask 255.255.255.0 gw 192.168.0.254
 ```
 ##### Ubuntu 20.04.1 LTS
 ```
@@ -128,6 +131,9 @@ LAMP server
 
 # allow html with <?php ?>
 AddType application/x-httpd-php .php .htm .html
+
+# /etc/init.d/apache2 stop
+# /etc/init.d/apache2 start
 ```
 ###### [htpasswd-generator](http://www.htaccesstools.com/htpasswd-generator/)
 ```
@@ -154,6 +160,17 @@ admin:$apr1$4u2HLeXv$ovmebujuSOgLg9VibH4531
 # service --status-all
 # update-rc.d apache2 enable
 ```
+##### Change Port
+```
+# vim /etc/apache2/ports.conf
+
+# Listen 80
+Listen 8080
+
+# vim /etc/apache2/sites-enabled/000-default.conf
+
+<VirtualHost *:8080>
+```
 ##### CentOS, Fedora
 ```
 # yum install httpd
@@ -170,6 +187,13 @@ admin:$apr1$4u2HLeXv$ovmebujuSOgLg9VibH4531
 
 # yum install php
 # systemctl restart httpd.service
+```
+##### Installing Apache on Windows Subsystem for Linux
+```
+# vim /etc/apache2/apache2.conf
+
+# (92)Protocol not available: AH00076: Failed to enable APR_TCP_DEFER_ACCEPT
+AcceptFilter http none
 ```
 ---
 
@@ -591,4 +615,19 @@ force_color_prompt=yes
 right   ALL=(ALL:ALL) NOPASSWD:ALL
 jenkins ALL=(ALL:ALL) NOPASSWD:ALL
 ```
+---
+
+### yum is an interactive, automated update program which can be used for maintaining systems using rpm
+```
+# cd /etc/yum.repos.d/
+# cd /etc/pki/rpm-gpg
+# wget https://www.centos.org/keys/RPM-GPG-KEY-CentOS-7 --no-check-certificate
+# rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6
+
+# yum clean all
+# yum update
+```
+
+##### [yum Tutorial and Examples](https://blog.gtwang.org/linux/yum-linux-command-tutorial-and-examples/)
+##### [yum(8) - Linux man page](https://linux.die.net/man/8/yum)
 ---

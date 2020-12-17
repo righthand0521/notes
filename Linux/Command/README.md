@@ -26,6 +26,15 @@ remove newline
 ```
 ---
 
+##### bc(1) - An arbitrary precision calculator language
+```
+# echo "5+50*3/20 + (19*2)/7" | bc
+# echo "5+50*3/20 + (19*2)/7" | bc -l
+# echo "scale=3; 5+50*3/20 + (19*2)/7" | bc -l
+# printf "%.3f\n" $(echo "5+50*3/20 + (19*2)/7" | bc -l)
+```
+---
+
 ##### crontab(1) - maintain crontab files for individual users (Vixie Cron)
 ```
 # ls -l /var/spool/cron/crontabs/
@@ -58,9 +67,33 @@ remove newline
 # curl ifconfig.me
 # curl v4.ifconfig.co
 # curl v6.ifconfig.co
+```
+```
+# curl --connect-timeout 3 --max-time 3 --retry 3 <HTTP URL>
+# curl --local-port $(((RANDOM%10000)+10000)) <HTTP URL>
+# curl -w "Status Code: %{http_code}" <HTTP URL>
+# curl <HTTP URL> --output <Local File Path>
+# curl -s --insecure <HTTP URL>
+```
+```
+# curl -v --proxy-insecure -x https://192.168.0.1:3128 -k -L https://www.google.com/
+# curl -v --proxy-insecure -x https://admin:password@192.168.0.1:3128 -k -L https://www.google.com/
+```
+```
+通過使用 -v 和 -trace獲取更多的連結資訊
 
-# curl --local-port $(((RANDOM%10000)+10000))
-# curl --connect-timeout 3 --max-time 3 --retry 3
+列出public_html下的所有資料夾和檔案
+# curl -u ftpuser:ftppass -O ftp://ftp_server/public_html/
+下載xss.php檔案
+# curl -u ftpuser:ftppass -O ftp://ftp_server/public_html/xss.php
+
+上傳檔案到FTP伺服器, 通過 -T 選項可將指定的本地檔案上傳到FTP伺服器上
+將myfile.txt檔案上傳到伺服器
+# curl -u ftpuser:ftppass -T myfile.txt ftp://ftp.testserver.com
+同時上傳多個檔案
+# curl -u ftpuser:ftppass -T "{file1,file2}" ftp://ftp.testserver.com
+從標準輸入獲取內容儲存到伺服器指定的檔案中
+# curl -u ftpuser:ftppass -T - ftp://ftp.testserver.com/myfile_1.txt
 ```
 ---
 
@@ -102,6 +135,14 @@ Timestamp to Date
 -r: recursive, so do subdirectories.
 -u: unified style, if your system lacks it or if recipient may not have it, use "-c".
 -N: treat absent files as empty.
+```
+---
+
+##### dos2unix(1) - DOS/MAC to UNIX text file format converter
+```
+# apt install dos2unix
+
+# find . -type f -print0 | xargs -0 dos2unix
 ```
 ---
 
@@ -178,6 +219,49 @@ List of commands you use most often
 ##### httperf(1) - HTTP performance measurement tool
 ```
 # httperf --hog --server 192.168.0.1 --num-conn 2500 --rate 500 --num-call 1 --timeout 5 --port 80
+```
+---
+
+##### hydra(1) - a very fast network logon cracker which supports many different services
+```
+# apt install hydra -y
+
+# hydra -V -f -l <UserName> -p <Password> <telnet|ftp|ssh|rdp>://<IP>
+# hydra -V -f -l <UserName> -p <Password> <IP> <telnet|ftp|ssh|rdp>
+# hydra -V -f -l <UserName> -P <Password File> <telnet|ftp|ssh|rdp>://<IP>
+# hydra -V -f -l <UserName> -P <Password File> <IP> <telnet|ftp|ssh|rdp>
+# hydra -V -f -L <UserName File> -p <Password> <telnet|ftp|ssh|rdp>://<IP>
+# hydra -V -f -L <UserName File> -p <Password> <IP> <telnet|ftp|ssh|rdp>
+# hydra -V -f -L <UserName File> -P <Password File> <telnet|ftp|ssh|rdp>://<IP>
+# hydra -V -f -L <UserName File> -P <Password File> <IP> <telnet|ftp|ssh|rdp>
+# hydra -V -f -t 3 -l <UserName> -p <Password> <telnet|ftp|ssh|rdp>://<IP>
+# hydra -V -f -t 5 -l <UserName> -P <Password File> <IP> <telnet|ftp|ssh|rdp>
+# hydra -V -f -t 3 -L <UserName File> -p <Password> <telnet|ftp|ssh|rdp>://<IP>
+# hydra -V -f -t 5 -L <UserName File> -P <Password File> <IP> <telnet|ftp|ssh|rdp>
+-l LOGIN or -L FILE  login with LOGIN name, or load several logins from FILE
+-p PASS  or -P FILE  try password PASS, or load several passwords from FILE
+-s PORT              if the service is on a different default port, define it here
+-f / -F              exit when a login/pass pair is found (-M: -f per host, -F global)
+-v / -V / -d         verbose mode / show login+pass for each attempt / debug mode
+-t TASKS             run TASKS number of connects in parallel per target (default: 16)
+-T TASKS             run TASKS connects in parallel overall (for -M, default: 64)
+-w / -W TIME         wait time for a response (32) / between connects per thread (0)
+
+# hydra -V -f -l <UserName> -x 1:1:aA1 192.168.0.1 rdp
+-x MIN:MAX:CHARSET   password bruteforce generation, type "-x -h" to get help
+ MIN     is the minimum number of characters in the password
+ MAX     is the maximum number of characters in the password
+ CHARSET is a specification of the characters to use in the generation
+            valid CHARSET values are: 'a' for lowercase letters,
+            'A' for uppercase letters, '1' for numbers, and for all others,
+            just add their real representation.
+ -y         disable the use of the above letters as placeholders
+ Examples:
+  -x 3:5:a       generate passwords from length 3 to 5 with all lowercase letters
+  -x 5:8:A1      generate passwords from length 5 to 8 with uppercase and numbers
+  -x 1:3:/       generate passwords from length 1 to 3 containing only slashes
+  -x 5:5:/%,.-   generate passwords with length 5 which consists only of /%,.-
+  -x 3:5:aA1 -y  generate passwords from length 3 to 5 with a, A and 1 only
 ```
 ---
 
@@ -654,6 +738,32 @@ reverse a list of words
 ---
 
 ##### uniq(1) - report or omit repeated lines
+---
+
+##### upnpc(1) - miniupnpc library test client
+```
+# apt install miniupnpc
+
+Add/Delete Port Mapping
+# upnpc -a ip port external_port tcp | udp
+# upnpc -d external_port tcp | udp
+
+List Port Mapping and Status
+# upnpc -l
+# upnpc -s
+
+External IP address
+# upnpc -e
+
+Initialize device list
+# upnpc -i
+
+Map these ports to this host
+# upnpc -r port1 tcp | udp
+```
+
+###### [Use upnpc Mapping to External Network](http://blog.chinaunix.net/uid-20648944-id-3134810.html)
+###### [Reference Manual: upnpc - interact with an external UPnP Internet Gateway Device](http://v2.nat32.com/upnpc.htm)
 ---
 
 ##### vmstat(8) - Report virtual memory statistics
