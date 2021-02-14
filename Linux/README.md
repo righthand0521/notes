@@ -2,6 +2,10 @@
 ===
 
 
+### [The Linux Kernel Archives](https://www.kernel.org/)
+### [The Linux Kernel documentation](https://www.kernel.org/doc/html/latest/index.html)
+---
+
 ### Upgrade Ubuntu Operating System to Latest Release
 ```
 # cat /etc/os-release
@@ -615,6 +619,11 @@ force_color_prompt=yes
 right   ALL=(ALL:ALL) NOPASSWD:ALL
 jenkins ALL=(ALL:ALL) NOPASSWD:ALL
 ```
+---
+
+###	[Magic SysRq key](https://en.wikipedia.org/wiki/Magic_SysRq_key)
+##### [Linux Magic System Request Key Hacks](https://www.kernel.org/doc/html/latest/admin-guide/sysrq.html)
+##### [ref](https://blog.gtwang.org/linux/safe-reboot-of-linux-using-magic-sysrq-key/)
 ---
 
 ### yum is an interactive, automated update program which can be used for maintaining systems using rpm

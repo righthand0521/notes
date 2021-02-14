@@ -13,15 +13,18 @@
 ##### [git(1) Manual Page](https://git.github.io/htmldocs/git.html)
 ##### [git-config](https://git.github.io/htmldocs/git-config.html)
 ```
+git config --list
+git config --list --local
+git config --list --global
+git config --list --system
+
 git config --global user.name "Yu-Chuan Cheng"
 git config --global user.email "righthand0521@gmail.com"
 git config --global core.autocrlf false
 git config --global core.symlinks true
 git config --global color.ui auto
-git config --list
-git config --list --local
-git config --list --global
-git config --list --system
+
+git config --global alias.logall 'log --oneline --decorate --graph --all'
 ```
 ##### [git-init](https://git.github.io/htmldocs/git-init.html)
 ```
@@ -77,7 +80,7 @@ git log --stat
 git log --name-status
 git log -p -m
 git log --pretty=format:'%h %s' --graph
-git log --all --decorate --oneline --graph
+git log --oneline --decorate --graph --all
 ```
 ##### [git-whatchanged](https://git.github.io/htmldocs/git-whatchanged.html)
 ```
@@ -127,6 +130,17 @@ git rev-parse --short HEAD
 https://github.com/github/gitignore
 git clone https://github.com/github/gitignore.git
 ```
+
+#### GitHub
+##### [GitHub CLI](https://cli.github.com/)
+```
+# apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+# apt-add-repository https://cli.github.com/packages
+# apt update
+# apt install gh -y
+```
+![gh auth login](ghAuth.png)
+###### [ref](https://ithelp.ithome.com.tw/articles/10240215)
 
 #### Git Lab
 ##### [GitLab Docs](https://docs.gitlab.com/ee/README.html)

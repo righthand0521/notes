@@ -33,6 +33,9 @@ remove newline
 # echo "scale=3; 5+50*3/20 + (19*2)/7" | bc -l
 # printf "%.3f\n" $(echo "5+50*3/20 + (19*2)/7" | bc -l)
 ```
+```
+# echo "obase=2; 11" | bc
+```
 ---
 
 ##### crontab(1) - maintain crontab files for individual users (Vixie Cron)
@@ -94,6 +97,13 @@ remove newline
 # curl -u ftpuser:ftppass -T "{file1,file2}" ftp://ftp.testserver.com
 從標準輸入獲取內容儲存到伺服器指定的檔案中
 # curl -u ftpuser:ftppass -T - ftp://ftp.testserver.com/myfile_1.txt
+```
+```
+Send Email
+# echo 'From: "Sender Name" <sender@example.com>' >> mail.txt
+# echo 'To: "Destination Email" <destination@example.com>' >> mail.txt
+# echo 'Subject: Sending Email Using Curl' >> mail.txt
+# curl -v --insecure "smtp://msa.hinet.net:25" --mail-from "<example@gmail.com>" --mail-rcpt "<example@gmail.com>" -T mail.txt
 ```
 ---
 
@@ -200,68 +210,9 @@ List of commands you use most often
 ```
 ---
 
-##### hping3(8) - send (almost) arbitrary TCP/IP packets to network hosts
-```
-# hping3 -q -n -a 10.0.0.1 --udp -s 53 --keep -p 68 --flood 192.168.0.1
-# hping3 -i u10000 -S -p 80 192.168.0.1
-# hping3 -c 10 -d 120 -S -w 64 -p 21 --flood --rand-source 192.168.0.1
--i  --interval (uX for X microseconds, for example -i u1000)
--c 10: Number of packets to send.
--d 120: Size of each packet that was sent to target machine.
--S: sending SYN packets only.
--w 64: TCP window size.
--p 21: Destination port (21 being FTP port).
---flood: Sending packets as fast as possible, without taking care to show incoming replies. Flood mode.
---rand-source: Using Random Source IP Addresses. You can also use -a or –spoof to hide hostnames.
-```
----
-
 ##### httperf(1) - HTTP performance measurement tool
 ```
 # httperf --hog --server 192.168.0.1 --num-conn 2500 --rate 500 --num-call 1 --timeout 5 --port 80
-```
----
-
-##### hydra(1) - a very fast network logon cracker which supports many different services
-```
-# apt install hydra -y
-
-# hydra -V -f -l <UserName> -p <Password> <telnet|ftp|ssh|rdp>://<IP>
-# hydra -V -f -l <UserName> -p <Password> <IP> <telnet|ftp|ssh|rdp>
-# hydra -V -f -l <UserName> -P <Password File> <telnet|ftp|ssh|rdp>://<IP>
-# hydra -V -f -l <UserName> -P <Password File> <IP> <telnet|ftp|ssh|rdp>
-# hydra -V -f -L <UserName File> -p <Password> <telnet|ftp|ssh|rdp>://<IP>
-# hydra -V -f -L <UserName File> -p <Password> <IP> <telnet|ftp|ssh|rdp>
-# hydra -V -f -L <UserName File> -P <Password File> <telnet|ftp|ssh|rdp>://<IP>
-# hydra -V -f -L <UserName File> -P <Password File> <IP> <telnet|ftp|ssh|rdp>
-# hydra -V -f -t 3 -l <UserName> -p <Password> <telnet|ftp|ssh|rdp>://<IP>
-# hydra -V -f -t 5 -l <UserName> -P <Password File> <IP> <telnet|ftp|ssh|rdp>
-# hydra -V -f -t 3 -L <UserName File> -p <Password> <telnet|ftp|ssh|rdp>://<IP>
-# hydra -V -f -t 5 -L <UserName File> -P <Password File> <IP> <telnet|ftp|ssh|rdp>
--l LOGIN or -L FILE  login with LOGIN name, or load several logins from FILE
--p PASS  or -P FILE  try password PASS, or load several passwords from FILE
--s PORT              if the service is on a different default port, define it here
--f / -F              exit when a login/pass pair is found (-M: -f per host, -F global)
--v / -V / -d         verbose mode / show login+pass for each attempt / debug mode
--t TASKS             run TASKS number of connects in parallel per target (default: 16)
--T TASKS             run TASKS connects in parallel overall (for -M, default: 64)
--w / -W TIME         wait time for a response (32) / between connects per thread (0)
-
-# hydra -V -f -l <UserName> -x 1:1:aA1 192.168.0.1 rdp
--x MIN:MAX:CHARSET   password bruteforce generation, type "-x -h" to get help
- MIN     is the minimum number of characters in the password
- MAX     is the maximum number of characters in the password
- CHARSET is a specification of the characters to use in the generation
-            valid CHARSET values are: 'a' for lowercase letters,
-            'A' for uppercase letters, '1' for numbers, and for all others,
-            just add their real representation.
- -y         disable the use of the above letters as placeholders
- Examples:
-  -x 3:5:a       generate passwords from length 3 to 5 with all lowercase letters
-  -x 5:8:A1      generate passwords from length 5 to 8 with uppercase and numbers
-  -x 1:3:/       generate passwords from length 1 to 3 containing only slashes
-  -x 5:5:/%,.-   generate passwords with length 5 which consists only of /%,.-
-  -x 3:5:aA1 -y  generate passwords from length 3 to 5 with a, A and 1 only
 ```
 ---
 
@@ -376,38 +327,6 @@ p: display PID/Program name for sockets
 ##### nl(1) - number lines of files
 ---
 
-##### nmap(1) - Network exploration tool and security / port scanner
-```
-# nmap <IP>/<Mask> -n -sP | awk '/Nmap scan report for/ {printf $5} /MAC Address:/ {print " => "$0}'
-# nmap -A <IP> -d --max-rate 0.1 --max-parallelism 1 --packet-trace
-# nmap -sS -sU -PN -p 1-65535 -v <IP> --packet-trace
-# nmap -sU -p 1-65535 -v <IP> --packet-trace
-
-userdb=/usr/share/nmap/nselib/data/usernames.list
-passdb=/usr/share/nmap/nselib/data/passwords.list
-# nmap -p 23 --script telnet-brute --script-args userdb=<fileName>,passdb=<fileName> <IP>
-# nmap -p 21 --script ftp-brute --script-args userdb=<fileName>,passdb=<fileName> <IP>
-# nmap -p 80 --script http-brute <IP>
-# nmap -p 22 --script ssh2-enum-algos <IP> -sV
-
-# ls -l /usr/share/nmap/scripts
-# nmap --script smb-os-discovery.nse
-# nmap --script-updatedb
-```
-```
-Install Nmap Version - https://nmap.org/dist/
-# nmap -V
-# apt-get purge --auto-remove nmap -y
-# wget https://nmap.org/dist/nmap-7.60.tgz
-# tar -zxvf nmap-7.60.tgz
-# cd nmap-7.60/
-# ./configure
-# make
-# make install
-# cd /usr/bin; ln -s /usr/local/bin/nmap; cd -
-```
----
-
 ##### openssl(1) - OpenSSL command line tool
 ```
 # apt install libpcap-dev libssl-dev -y
@@ -453,12 +372,6 @@ To list all available cipher algorithms
 ##### patch(1) - apply a diff file to an original
 ```
 # patch -p0 < file.patch
-```
----
-
-##### pcapfix(1) - repair pcap and pcapng files
-```
-# apt install pcapfix -y
 ```
 ---
 
@@ -654,40 +567,6 @@ tar jxvf <File>.tbz2
 ```
 ---
 
-##### tcpdump(8) - dump traffic on a network
-```
-# tcpdump -C 100 -nnvvXSs 1514 -w `uname -n`_`date +"%Y%m%d%H%M%S"`.pcap
-# tcpdump -G 86400 -nnvvXSs 1514 -w %Y%m%d%H%M%S.pcap
-
-# tcpdump -r file.pcap
-# tcpdump -xXr file.pcap | awk '{print $10}'
-
-Split Pcap Size
-# tcpdump -r <pcap file> -w <output pcap file> -C <Per Pcap Size>
-
-# tcpdump -nn ether host aa:bb:cc:11:22:33
-# tcpdump -nn src host 192.168.0.1
-# tcpdump -nn not port 23
-# tcpdump -nn udp and port 5353 and 5354
-# tcpdump -nn net not 10.24.0.0/24
-
-ARP
-# tcpdump -nni eth0 arp
-ICMP
-# tcpdump -nni eth0 icmp
-RIPv2
-# tcpdump -i eth0 -v -s0 udp and port 520
-RIPng
-# tcpdump -i eth0 -v -s0 udp and port 521
-DHCP
-# tcpdump -i eth0 port 67 or port 68 -e -n
-DHCPv6
-# tcpdump -i eth0 port 546 or port 547 -e -n
-LLDP
-# tcpdump -i eth0 ether proto 0x88cc
-```
----
-
 ##### telnet(1) - user interface to the TELNET protocol
 ```
 # apt install telnet-ssl -y
@@ -738,32 +617,6 @@ reverse a list of words
 ---
 
 ##### uniq(1) - report or omit repeated lines
----
-
-##### upnpc(1) - miniupnpc library test client
-```
-# apt install miniupnpc
-
-Add/Delete Port Mapping
-# upnpc -a ip port external_port tcp | udp
-# upnpc -d external_port tcp | udp
-
-List Port Mapping and Status
-# upnpc -l
-# upnpc -s
-
-External IP address
-# upnpc -e
-
-Initialize device list
-# upnpc -i
-
-Map these ports to this host
-# upnpc -r port1 tcp | udp
-```
-
-###### [Use upnpc Mapping to External Network](http://blog.chinaunix.net/uid-20648944-id-3134810.html)
-###### [Reference Manual: upnpc - interact with an external UPnP Internet Gateway Device](http://v2.nat32.com/upnpc.htm)
 ---
 
 ##### vmstat(8) - Report virtual memory statistics
